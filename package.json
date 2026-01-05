@@ -1,33 +1,29 @@
 {
   "name": "horario-uc",
-  "version": "1.6.1",
-  "description": "Planificador de cursos de la UC.",
+  "version": "1.6.1-fork",
+  "description": "Fork de planificador de cursos de la UC.",
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --node-env production",
-    "build:dev": "webpack --mode development",
-    "build:digitalocean": "npm install --include=dev && npm run build:dev",
-    "dev": "webpack serve --mode development",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "serve": "webpack serve --node-env production",
+    "build:dev": "webpack --node-env development",
+    "build:vps": "npm ci && npm run build",
+    "dev": "webpack serve --mode development --port 4283",
+    "serve": "webpack serve --mode production --port 4283",
     "lint": "eslint . --ext .js,.jsx",
     "format": "eslint . --fix --ext .js,.jsx"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aurmeneta/HorarioUC.git"
+    "url": "git+https://github.com/luvvyamy/HorarioUC.git"
   },
   "keywords": [
     "uc",
     "puc"
   ],
-  "author": "Andrés Urmeneta B. <aurmeneta@uc.cl>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aurmeneta/HorarioUC/issues"
+    "url": "https://github.com/luvvyamy/HorarioUC/issues"
   },
-  "homepage": "http://aurmeneta.github.io/HorarioUC",
   "engines": {
     "node": "20.x",
     "npm": "10.x"
@@ -35,12 +31,10 @@
   "dependencies": {
     "@aurmeneta/buscacursos-uc": "^2.3.0",
     "@babel/runtime": "^7.26.0",
-    "@rollbar/react": "^0.11.2",
     "bootstrap": "^5.3.3",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "rollbar": "^2.26.4"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",

@@ -13,20 +13,15 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 import React from 'react';
-import { Provider } from '@rollbar/react';
-import Rollbar from 'rollbar';
 
 import * as util from './util/util';
 import * as storage from './util/storage';
-import rollbarConfig from './util/rollbar-config';
 
 import CursosCard from './components/Cards/CursosCard';
 import BuscarCursoCard from './components/Cards/BuscarCursoCard';
 import CombinacionesCard from './components/Cards/CombinacionesCard';
 import ModalCupos from './components/ModalCupos';
 import Layout from './components/Layout';
-
-const rollbar = new Rollbar(rollbarConfig);
 
 const choquesPermitidos = storage.cargarChoquesPermitidos();
 
@@ -79,16 +74,6 @@ class App extends React.Component {
   borrarSigla(event, sigla) {
     event.preventDefault();
 
-    try {
-      // eslint-disable-next-line no-undef
-      gtag('event', 'del_sigla', {
-        event_category: 'siglas',
-        event_label: 'borrar sigla',
-        value: sigla.sigla,
-      });
-    } catch (e) {
-      rollbar.warn(`Error al publicar analytics ${e.toString()}`);
-    }
 
     // Eliminar la Sigla del array de siglas y strings de siglas.
     this.setState((prevState) => {
@@ -112,17 +97,6 @@ class App extends React.Component {
       // Revisar que sigla no haya sido añadida anteriormente.
       if (!stringSiglas.includes(sigla)) {
         stringSiglas.push(sigla);
-
-        try {
-          // eslint-disable-next-line no-undef
-          gtag('event', 'add_sigla', {
-            event_category: 'siglas',
-            event_label: 'añadir sigla',
-            value: sigla,
-          });
-        } catch (e) {
-          rollbar.warn(`Error al publicar analytics ${e.toString()}`);
-        }
       }
       return { stringSiglas, cambios: true };
     });
@@ -165,7 +139,6 @@ class App extends React.Component {
         .catch((reason) => {
           // Si ocurre un error, elimina las siglas buscadas del array para evitar recurciones
           // y muestra la razón del error.
-          rollbar.error(`Error al buscar nuevas siglas; ${reason}`);
           this.setState((prevState) => {
             const { stringSiglas: stringSiglasAnterior } = prevState;
             nuevosStringsSiglas.forEach(
@@ -217,7 +190,6 @@ class App extends React.Component {
       // TODO: mejorar cómo se manejan las ambigüedades.
       combinaciones = util.generarCombinaciones(siglasFiltradas, choquesPermitidos);
     } catch (e) {
-      rollbar.error(`Error al generar combinaciones; ${e.toString()}`);
       errorEnCombinaciones = true;
     }
 
@@ -245,59 +217,57 @@ class App extends React.Component {
 
     return (
       <React.StrictMode>
-        <Provider instance={rollbar}>
-          <Layout>
-            <ModalCupos
-              curso={cursoCupos}
-              periodo={periodo}
+        <Layout>
+          <ModalCupos
+            curso={cursoCupos}
+            periodo={periodo}
+          />
+
+          <div className="alert alert-danger">
+            La Universidad está bloqueando este servicio. Puede ser que haya intermitencias y no se muestren resultados de búsquedas. Alternativamente, <a href="https://ramosuc.cl/" target="_blanck" rel="noreferrer">RamosUC</a> está disponible.
+          </div>
+
+          <div className="alert alert-info">
+            <b>Choques de módulos:</b>
+            {' '}
+            Si quieres permitir el choque de módulos, puedes configurar las reglas
+            {' '}
+            <a href="/choques.html">acá</a>
+            .
+            <br />
+            Si tienes algún comentario o encuentras algún error, déjalo
+            {' '}
+            <a href="https://forms.gle/f4BrPiT7si46yzEA9" target="_blank" rel="noreferrer">acá</a>
+            .
+          </div>
+
+          <div className="row">
+            <CursosCard
+              siglas={siglas}
+              combinaciones={combinaciones}
+              borrarSigla={this.borrarSigla}
+              seccionesSeleccionadas={seccionesSeleccionadas}
+              elegirSeccion={this.elegirSeccion}
             />
 
-            <div className="alert alert-danger">
-              La Universidad está bloqueando este servicio. Puede ser que haya intermitencias y no se muestren resultados de búsquedas. Alternativamente, <a href="https://ramosuc.cl/" target="_blanck" rel="noreferrer">RamosUC</a> está disponible.
-            </div>
+            <BuscarCursoCard
+              agregarSigla={this.agregarSigla}
+              buscando={buscando}
+              errorEnBusqueda={errorEnBusqueda}
+              periodo={periodo}
+              elegirPeriodo={this.elegirPeriodo}
+            />
+          </div>
 
-            <div className="alert alert-info">
-              <b>Choques de módulos:</b>
-              {' '}
-              Si quieres permitir el choque de módulos, puedes configurar las reglas
-              {' '}
-              <a href="/choques.html">acá</a>
-              .
-              <br />
-              Si tienes algún comentario o encuentras algún error, déjalo
-              {' '}
-              <a href="https://forms.gle/f4BrPiT7si46yzEA9" target="_blank" rel="noreferrer">acá</a>
-              .
-            </div>
-
-            <div className="row">
-              <CursosCard
-                siglas={siglas}
-                combinaciones={combinaciones}
-                borrarSigla={this.borrarSigla}
-                seccionesSeleccionadas={seccionesSeleccionadas}
-                elegirSeccion={this.elegirSeccion}
-              />
-
-              <BuscarCursoCard
-                agregarSigla={this.agregarSigla}
-                buscando={buscando}
-                errorEnBusqueda={errorEnBusqueda}
-                periodo={periodo}
-                elegirPeriodo={this.elegirPeriodo}
-              />
-            </div>
-
-            <div className="row">
-              <CombinacionesCard
-                combinaciones={combinaciones}
-                guardarCursoCupos={this.guardarCursoCupos}
-                semestre={periodo}
-                errorEnCombinaciones={errorEnCombinaciones}
-              />
-            </div>
-          </Layout>
-        </Provider>
+          <div className="row">
+            <CombinacionesCard
+              combinaciones={combinaciones}
+              guardarCursoCupos={this.guardarCursoCupos}
+              semestre={periodo}
+              errorEnCombinaciones={errorEnCombinaciones}
+            />
+          </div>
+        </Layout>
       </React.StrictMode>
     );
   }

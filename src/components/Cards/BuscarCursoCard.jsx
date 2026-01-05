@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import BuscarCursoForm from '../Forms/BuscarCursoForm';
 import AlertaErrorEnBusqueda from '../Alertas/AlertaErrorEnBusqueda';
-import ErrorBoundary from '../ErrorBoundary';
 
 import { periodoSeleccionado } from '../../util/storage';
 
@@ -16,16 +15,14 @@ function BuscarCursoCard(props) {
     <div className="col-md-4">
       <div className="card border-0">
         <div className="card-body">
-          <ErrorBoundary>
-            <h5 className="card-title">Buscar cursos</h5>
-            <BuscarCursoForm
-              agregarSigla={agregarSigla}
-              buscando={buscando}
-              periodo={periodo}
-              elegirPeriodo={elegirPeriodo}
-            />
-            <AlertaErrorEnBusqueda errorEnBusqueda={errorEnBusqueda} />
-          </ErrorBoundary>
+          <h5 className="card-title">Buscar cursos</h5>
+          <BuscarCursoForm
+            agregarSigla={agregarSigla}
+            buscando={buscando}
+            periodo={periodo}
+            elegirPeriodo={elegirPeriodo}
+          />
+          <AlertaErrorEnBusqueda errorEnBusqueda={errorEnBusqueda} />
         </div>
       </div>
     </div>

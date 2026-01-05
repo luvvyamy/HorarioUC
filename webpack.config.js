@@ -58,7 +58,6 @@ module.exports = {
     new EnvironmentPlugin({
       npm_package_version: undefined,
       NODE_ENV: 'development',
-      ROLLBAR_ACCESS_TOKEN: undefined,
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
@@ -73,5 +72,8 @@ module.exports = {
         },
       },
     },
+  },
+  performance: {
+    hints: false,
   },
 };

@@ -65,8 +65,8 @@ const NUMERO_MODULOS = {
   2: HORA_MODULOS['2'].length,
 };
 
-const URL_BUSCACURSOS = 'https://buscacursos.aurmeneta.cl/';
-const URL_CUPOS = 'https://buscacursos.aurmeneta.cl/informacionVacReserva.ajax.php';
+const URL_BUSCACURSOS = 'https://buscacursos-proxy.luvvyamy.workers.dev/';
+const URL_CUPOS = 'https://buscacursos-proxy.luvvyamy.workers.dev/informacionVacReserva.ajax.php';
 
 /**
  * Busca la sigla indicada en el semestre indicado en buscaCursos.
@@ -91,7 +91,7 @@ const buscarSigla = async (periodo, stringSigla) => {
  * @returns {Promise<Sigla[]>}
  */
 const buscarSiglas = (periodo, stringSiglas) => Promise
-  .all(stringSiglas.map((stringSigla) => buscarSigla(periodo, stringSigla)));
+  .all(stringSiglas.map((stringSigla) => buscarSigla('2026-1', stringSigla)));
 
 // Generar combinaciones de cursos desde un array con los cursos agrupados por sigla y horario.
 const generarCombinaciones = (siglasOriginales, choquesPermitidos) => {
