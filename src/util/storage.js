@@ -17,7 +17,7 @@ import Choque from './Choque';
 import { URL_BUSCACURSOS } from './util';
 
 const storage = window.localStorage;
-const periodoDefault = '2024-1'; // TODO: elegir período por defecto de forma más inteligente
+const periodoDefault = '2026-1'; // TODO: elegir período por defecto de forma más inteligente
 
 function periodosDisponibles() {
   const periodos = storage.getItem('periodos');

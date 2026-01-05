@@ -6,7 +6,7 @@ function BotonAgregar(props) {
 
   if (buscando) {
     return (
-      <button className="btn btn-warning" type="button">Buscando...</button>
+      <button className="btn btn-warning" type="button">Cargando...</button>
     );
   }
   return <button className="btn btn-success" onClick={onClick} type="button">Agregar</button>;
